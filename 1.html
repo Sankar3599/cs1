@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Security Unit-1 Quiz</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+        .question { margin-bottom: 25px; padding: 15px; border-left: 5px solid #3498db; background: #fafafa; }
+        .options { list-style: none; padding: 0; }
+        .options li { margin: 10px 0; }
+        button { display: block; width: 100%; padding: 15px; background-color: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 18px; margin-top: 20px; }
+        button:hover { background-color: #2980b9; }
+        #results { margin-top: 20px; padding: 20px; display: none; border-radius: 5px; text-align: center; font-weight: bold; }
+        .correct { color: #27ae60; }
+        .incorrect { color: #c0392b; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Cyber Security: Unit 1 Quiz</h1>
+    <form id="quizForm">
+        <div id="quizContainer"></div>
+        <button type="button" onclick="calculateScore()">Submit Quiz</button>
+    </form>
+    <div id="results"></div>
+</div>
+
+<script>
+    const quizData = [
+        { q: "The term cybercrime primarily refers to:", a: "b", options: { a: "Crimes committed using physical weapons", b: "Crimes involving computers and networks", c: "Crimes related to banking only", d: "Crimes committed in cyberspace cafés only" }, ref: 1 },
+        { q: "The origin of the word cyber is derived from:", a: "b", options: { a: "Latin language", b: "Greek word kybernetes", c: "French language", d: "German language" }, ref: 1 },
+        { q: "Cybercrime mainly threatens which of the following?", a: "c", options: { a: "Physical security", b: "National borders", c: "Information security", d: "Environmental security" }, ref: 2 },
+        { q: "Which of the following is NOT a component of information security?", a: "d", options: { a: "Confidentiality", b: "Integrity", c: "Availability", d: "Scalability" }, ref: 3 },
+        { q: "Unauthorized access to data mainly affects:", a: "c", options: { a: "Availability", b: "Integrity", c: "Confidentiality", d: "Authentication" }, ref: 3 },
+        { q: "A cybercriminal motivated mainly by financial gain is known as:", a: "d", options: { a: "Hacktivist", b: "Script kiddie", c: "Cyber terrorist", d: "Cyber fraudster" }, ref: 3 },
+        { q: "Hackers who attack systems for ideological or political reasons are called:", a: "b", options: { a: "Crackers", b: "Hacktivists", c: "Insiders", d: "Spammers" }, ref: 3 },
+        { q: "Cybercrime committed by employees within an organization is classified as:", a: "b", options: { a: "External attack", b: "Insider attack", c: "Distributed attack", d: "Social attack" }, ref: 3 },
+        { q: "Cyberstalking involves:", a: "b", options: { a: "Physical surveillance", b: "Repeated online harassment", c: "Hardware theft", d: "Network monitoring" }, ref: 3 },
+        { q: "Which medium is most commonly used for cyberstalking?", a: "b", options: { a: "Radio signals", b: "Social media platforms", c: "Optical fiber", d: "Satellite links" }, ref: 4 },
+        { q: "Cybercafes contribute to cybercrime mainly due to:", a: "b", options: { a: "High-speed internet", b: "Lack of user authentication", c: "Use of antivirus software", d: "Limited access time" }, ref: 4 },
+        { q: "A botnet is a network of:", a: "b", options: { a: "Legitimate servers", b: "Infected computers controlled remotely", c: "Firewalls", d: "Routers" }, ref: 4 },
+        { q: "Botnets are commonly used to launch:", a: "b", options: { a: "File compression", b: "DDoS attacks", c: "Encryption", d: "Backup processes" }, ref: 4 },
+        { q: "An attack vector refers to:", a: "b", options: { a: "Type of antivirus", b: "Path used to gain unauthorized access", c: "Encryption algorithm", d: "Security policy" }, ref: 4 },
+        { q: "The rapid increase in mobile devices has led to:", a: "b", options: { a: "Reduced cybercrime", b: "Increased security challenges", c: "Elimination of malware", d: "Stronger firewalls" }, ref: 5 },
+        { q: "Which of the following is a unique mobile security issue?", a: "b", options: { a: "Phishing", b: "SMS-based attacks", c: "Buffer overflow", d: "SQL injection" }, ref: 6 },
+        { q: "Mobile devices are more vulnerable mainly due to:", a: "b", options: { a: "Limited storage", b: "Open wireless communication", c: "High processing power", d: "Wired connections" }, ref: 6 },
+        { q: "Malware designed specifically for mobile phones is called:", a: "c", options: { a: "Wormware", b: "Spyware", c: "Mobile malware", d: "Adware" }, ref: 6 },
+        { q: "Bluetooth-based attacks on mobiles are known as:", a: "a", options: { a: "Bluejacking", b: "Phishing", c: "Spoofing", d: "Sniffing" }, ref: 6 },
+        { q: "A Denial of Service (DoS) attack aims to:", a: "c", options: { a: "Steal data", b: "Modify files", c: "Disrupt services", d: "Encrypt data" }, ref: 6 },
+        { q: "Which attack floods a network with traffic from multiple systems?", a: "c", options: { a: "Phishing", b: "Spoofing", c: "DDoS", d: "Sniffing" }, ref: 7 },
+        { q: "Malware that replicates itself without user action is called:", a: "b", options: { a: "Virus", b: "Worm", c: "Trojan", d: "Rootkit" }, ref: 7 },
+        { q: "A Trojan horse is best described as:", a: "b", options: { a: "Self-replicating malware", b: "Legitimate software with hidden malicious code", c: "Hardware attack", d: "Network monitoring tool" }, ref: 7 },
+        { q: "Sniffing attacks mainly target:", a: "b", options: { a: "Hardware components", b: "Network traffic", c: "Software bugs", d: "User passwords only" }, ref: 7 },
+        { q: "Spoofing involves:", a: "b", options: { a: "Data encryption", b: "Identity impersonation", c: "File deletion", d: "System backup" }, ref: 7 },
+        { q: "Phishing attacks primarily aim to:", a: "b", options: { a: "Destroy networks", b: "Gain sensitive user information", c: "Improve security", d: "Compress data" }, ref: 7 },
+        { q: "Which attack modifies data packets during transmission?", a: "a", options: { a: "Man-in-the-Middle", b: "DoS", c: "Brute force", d: "Botnet" }, ref: 8 },
+        { q: "Malware that records keystrokes is known as:", a: "c", options: { a: "Trojan", b: "Worm", c: "Keylogger", d: "Spyware" }, ref: 8 },
+        { q: "Which factor significantly increases cybercrime in mobile devices?", a: "b", options: { a: "Frequent OS updates", b: "Use of public Wi-Fi", c: "Strong authentication", d: "Encrypted storage" }, ref: 9 },
+        { q: "Network and computer attacks mainly exploit:", a: "b", options: { a: "Hardware faults", b: "Software vulnerabilities", c: "Legal loopholes", d: "User manuals" }, ref: 9 }
+    ];
+
+    function loadQuiz() {
+        const container = document.getElementById('quizContainer');
+        quizData.forEach((item, index) => {
+            const qDiv = document.createElement('div');
+            qDiv.className = 'question';
+            qDiv.innerHTML = `
+                <p><strong>${index + 1}. ${item.q}</strong> [Source: ${item.ref}]</p>
+                <ul class="options">
+                    ${Object.entries(item.options).map(([key, val]) => `
+                        <li>
+                            <label>
+                                <input type="radio" name="q${index}" value="${key}"> ${key.toUpperCase()}) ${val}
+                            </label>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+            container.appendChild(qDiv);
+        });
+    }
+
+    function calculateScore() {
+        let score = 0;
+        quizData.forEach((item, index) => {
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            if (selected && selected.value === item.a) {
+                score++;
+            }
+        });
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.style.display = 'block';
+        resultsDiv.innerHTML = `You scored ${score} out of ${quizData.length}!`;
+        resultsDiv.className = score > (quizData.length / 2) ? 'correct' : 'incorrect';
+        window.scrollTo(0, 0);
+    }
+
+    loadQuiz();
+</script>
+
+</body>
+</html>
